@@ -1,7 +1,5 @@
 package com.omarahmed42.main;
 
-import org.lwjgl.glfw.GLFW;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseListener {
