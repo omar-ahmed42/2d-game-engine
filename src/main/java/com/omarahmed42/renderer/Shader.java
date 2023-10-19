@@ -77,13 +77,14 @@ public class Shader {
             assert false : "Error: Could not open file for shader: '" + filePath + "'";
         }
 
-        System.out.println(vertexSource);
-        System.out.println(fragmentSource);
+        // System.out.println(vertexSource);
+        // System.out.println(fragmentSource);
     }
 
     public void compile() {
         // Compile and link shaders
-        int vertexID, fragmentID;
+        int vertexID;
+        int fragmentID;
         // First load and compile the vertex shader
         vertexID = glCreateShader(GL_VERTEX_SHADER);
         // Pass the shader source to the GPU
