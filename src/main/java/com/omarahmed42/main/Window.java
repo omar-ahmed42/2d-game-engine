@@ -1,15 +1,10 @@
-package com.omarahmed42;
+package com.omarahmed42.main;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.omarahmed42.main.KeyListener;
-import com.omarahmed42.main.LevelEditorScene;
-import com.omarahmed42.main.LevelScene;
-import com.omarahmed42.main.MouseListener;
-import com.omarahmed42.main.Scene;
 import com.omarahmed42.util.Time;
 
 import static org.lwjgl.system.MemoryUtil.*;
@@ -95,9 +90,9 @@ public class Window {
 
         // Configure GLFW
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         // Create the window
 
