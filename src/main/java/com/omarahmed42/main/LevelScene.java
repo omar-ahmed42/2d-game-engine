@@ -1,7 +1,5 @@
 package com.omarahmed42.main;
 
-import com.omarahmed42.Window;
-
 public class LevelScene extends Scene {
     public LevelScene() {
         System.out.println("Inside level scene");
@@ -12,9 +10,5 @@ public class LevelScene extends Scene {
 
     @Override
     public void update(float dt) {
-    }
-
-    @Override
-    public void init() {
     }
 }

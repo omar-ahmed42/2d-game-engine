@@ -21,7 +21,7 @@ public class MouseListener {
 
     public static MouseListener get() {
         if (MouseListener.instance == null) {
-            instance = new MouseListener();
+            MouseListener.instance = new MouseListener();
         }
 
         return MouseListener.instance;

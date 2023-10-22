@@ -32,7 +32,7 @@ public class Camera {
         return this.viewMatrix;
     }
 
-    public Matrix4f getProjectMatrix() {
+    public Matrix4f getProjectionMatrix() {
         return this.projectionMatrix;
     }
 }

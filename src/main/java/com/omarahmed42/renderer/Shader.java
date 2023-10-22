@@ -54,7 +54,7 @@ public class Shader {
             // Find the second pattern after #type 'pattern'
             index = source.indexOf("#type", eol) + 6;
             eol = source.indexOf("\r\n", index);
-            String secondPattern = source.substring(index, eol);
+            String secondPattern = source.substring(index, eol).trim();
 
             if (firstPattern.equals("vertex")) {
                 vertexSource = splitString[1];
@@ -110,7 +110,7 @@ public class Shader {
         if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: '" + filePath + "''\n\tFragment shader compilation failed.");
-            System.out.println(glGetShaderInfoLog(vertexID, len));
+            System.out.println(glGetShaderInfoLog(fragmentID, len));
             assert false : "";
         }
 
@@ -145,7 +145,7 @@ public class Shader {
         beingUsed = false;
     }
 
-    public void uploadMat4(String varName, Matrix4f mat4) {
+    public void uploadMat4f(String varName, Matrix4f mat4) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
@@ -153,7 +153,7 @@ public class Shader {
         glUniformMatrix4fv(varLocation, false, matBuffer);
     }
 
-    public void uploadMat4(String varName, Matrix3f mat3) {
+    public void uploadMat3f(String varName, Matrix3f mat3) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);

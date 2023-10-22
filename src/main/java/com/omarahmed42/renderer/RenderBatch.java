@@ -1,9 +1,15 @@
 package com.omarahmed42.renderer;
 
-import com.omarahmed42.Window;
 import com.omarahmed42.components.SpriteRenderer;
+import com.omarahmed42.main.Window;
+import com.omarahmed42.util.AssetPool;
 
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import org.joml.Vector4f;
 
@@ -34,8 +40,7 @@ public class RenderBatch {
     private Shader shader;
 
     public RenderBatch(int maxBatchSize) {
-        shader = new Shader("assets/shaders/default.glsl");
-        shader.compile();
+        this.shader = AssetPool.getShader("assets/shaders/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
 
@@ -92,8 +97,8 @@ public class RenderBatch {
         
         // Use shader
         shader.use();
-        shader.uploadMat4("uProjection", Window.getScene().camera().getProjectMatrix());
-        shader.uploadMat4("uView", Window.getScene().camera().getViewMatrix());
+        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
+        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
         
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
