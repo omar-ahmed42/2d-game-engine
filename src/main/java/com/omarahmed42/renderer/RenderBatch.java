@@ -137,7 +137,6 @@ public class RenderBatch {
             } else if (i == 3) {
                 yAdd = 1.0f;
             }
-        }
 
         // Load position
         vertices[offset] = sprite.gameObject.transform.position.x + (xAdd * sprite.gameObject.transform.scale.x);
@@ -150,6 +149,7 @@ public class RenderBatch {
         vertices[offset + 5] = color.w;
 
         offset += VERTEX_SIZE;
+    }
     }
 
     private int[] generateIndices() {
