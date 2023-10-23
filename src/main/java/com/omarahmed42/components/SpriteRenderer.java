@@ -7,6 +7,8 @@ import com.omarahmed42.main.Component;
 import com.omarahmed42.main.Transform;
 import com.omarahmed42.renderer.Texture;
 
+import imgui.ImGui;
+
 public class SpriteRenderer extends Component {
 
     private Vector4f color;
@@ -36,6 +38,15 @@ public class SpriteRenderer extends Component {
     public void update(float dt) {
         if (!this.lastTransform.equals(this.gameObject.transform)) {
             this.gameObject.transform.copy(lastTransform);
+            this.isDirty = true;
+        }
+    }
+
+    @Override
+    public void imgui() {
+        float[] imColor = {color.x, color.y, color.z, color.w};
+        if (ImGui.colorPicker4("Color Picker: ", imColor)) {
+            this.color.set(imColor[0], imColor[1], imColor[2], imColor[3]);
             this.isDirty = true;
         }
     }

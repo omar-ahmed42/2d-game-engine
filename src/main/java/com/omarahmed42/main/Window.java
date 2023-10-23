@@ -15,6 +15,7 @@ public class Window {
     private int height;
     private String title;
     private long glfwWindow;
+    private ImGuiLayer imGuiLayer;
 
     public float r, g, b, a;
     private boolean fadeToBlack = false;
@@ -25,13 +26,12 @@ public class Window {
 
     private Window() {
         this.width = 1920;
-        this.height = 1080;
+        this.height = 1017;
         this.title = "Mario";
         r = 1;
         g = 1;
         b = 1;
         a = 1;
-
     }
 
     public static void changeScene(int newScene) {
@@ -100,6 +100,13 @@ public class Window {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+            System.out.println("Height: " + newHeight);
+            System.out.println("Width: " + newWidth);
+            System.out.println("---------------");
+        });
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -119,6 +126,9 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+        this.imGuiLayer = new ImGuiLayer(glfwWindow);
+        this.imGuiLayer.initImGui();
+
         Window.changeScene(0);
     }
 
@@ -136,7 +146,7 @@ public class Window {
             if (dt >= 0)
                 currentScene.update(dt);
 
-
+            this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
 
             endTime = (float) glfwGetTime();
@@ -147,5 +157,21 @@ public class Window {
 
     public static Scene getScene() {
         return get().currentScene;
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int width) {
+        get().width = width;
+    }
+
+    public static void setHeight(int height) {
+        get().height = height;
     }
 }

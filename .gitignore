@@ -263,3 +263,5 @@ buildNumber.properties
 # End of https://www.toptal.com/developers/gitignore/api/git,visualstudiocode,intellij,eclipse,maven,java
 
 assets/images/*
+assets/fonts/*
+*.ini
