@@ -17,11 +17,16 @@ import java.util.List;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch> {
     // Vertex
     // ======
     // Pos             Color                        tex coords      tex id
     // float, float,   float, float, float, float   float, float    float
+
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex());
+    }
 
     private final int POS_SIZE = 2;
     private final int COLOR_SIZE = 4;
@@ -48,8 +53,10 @@ public class RenderBatch {
     
     private int maxBatchSize;
     private Shader shader;
+    private int zIndex;
 
-    public RenderBatch(int maxBatchSize) {
+    public RenderBatch(int maxBatchSize, int zIndex) {
+        this.zIndex = zIndex;
         this.shader = AssetPool.getShader("assets/shaders/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -253,4 +260,7 @@ public class RenderBatch {
         return this.textures.contains(tex);
     }
 
+    public int zIndex() {
+        return zIndex;
+    }
 }
