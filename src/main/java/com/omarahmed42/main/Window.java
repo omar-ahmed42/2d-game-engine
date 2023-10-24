@@ -4,6 +4,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import com.omarahmed42.renderer.DebugDraw;
 import com.omarahmed42.scenes.LevelEditorScene;
 import com.omarahmed42.scenes.LevelScene;
 import com.omarahmed42.scenes.Scene;
@@ -142,11 +143,16 @@ public class Window {
         while (!glfwWindowShouldClose(glfwWindow)) {
             // Poll events
             glfwPollEvents();
+
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (dt >= 0)
+            if (dt >= 0){
+                DebugDraw.draw();
                 currentScene.update(dt);
+            }
 
             this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
