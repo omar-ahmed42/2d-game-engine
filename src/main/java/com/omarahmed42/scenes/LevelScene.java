@@ -1,4 +1,6 @@
-package com.omarahmed42.main;
+package com.omarahmed42.scenes;
+
+import com.omarahmed42.main.Window;
 
 public class LevelScene extends Scene {
     public LevelScene() {

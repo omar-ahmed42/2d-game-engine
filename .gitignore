@@ -265,3 +265,4 @@ buildNumber.properties
 assets/images/*
 assets/fonts/*
 *.ini
+*.txt

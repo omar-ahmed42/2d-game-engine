@@ -4,6 +4,10 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import com.omarahmed42.scenes.LevelEditorScene;
+import com.omarahmed42.scenes.LevelScene;
+import com.omarahmed42.scenes.Scene;
+
 import static org.lwjgl.system.MemoryUtil.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -38,18 +42,19 @@ public class Window {
         switch (newScene) {
             case 0:
                 currentScene = new LevelEditorScene();
-                currentScene.init();
-                currentScene.start();
+
                 break;
             case 1:
                 currentScene = new LevelScene();
-                currentScene.init();
-                currentScene.start();
                 break;
             default:
                 assert false : "Unknown scene'" + newScene + "'";
                 break;
         }
+
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
     }
 
     public static Window get() {
@@ -103,9 +108,6 @@ public class Window {
         glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
-            System.out.println("Height: " + newHeight);
-            System.out.println("Width: " + newWidth);
-            System.out.println("---------------");
         });
 
         // Make the OpenGL context current
@@ -153,6 +155,7 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+        currentScene.saveExist();
     }
 
     public static Scene getScene() {

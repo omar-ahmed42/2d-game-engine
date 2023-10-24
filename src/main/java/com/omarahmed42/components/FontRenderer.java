@@ -1,7 +1,5 @@
 package com.omarahmed42.components;
 
-import com.omarahmed42.main.Component;
-
 public class FontRenderer extends Component {
 
     @Override
