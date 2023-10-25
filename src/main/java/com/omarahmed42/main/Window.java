@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import com.omarahmed42.renderer.DebugDraw;
+import com.omarahmed42.renderer.FrameBuffer;
 import com.omarahmed42.scenes.LevelEditorScene;
 import com.omarahmed42.scenes.LevelScene;
 import com.omarahmed42.scenes.Scene;
@@ -21,6 +22,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private ImGuiLayer imGuiLayer;
+    private FrameBuffer frameBuffer;
 
     public float r, g, b, a;
     private boolean fadeToBlack = false;
@@ -132,6 +134,8 @@ public class Window {
         this.imGuiLayer = new ImGuiLayer(glfwWindow);
         this.imGuiLayer.initImGui();
 
+        this.frameBuffer = new FrameBuffer(1920, 1017);
+        glViewport(0, 0, 1920, 1017);
         Window.changeScene(0);
     }
 
@@ -146,6 +150,7 @@ public class Window {
 
             DebugDraw.beginFrame();
 
+            this.frameBuffer.bind();
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -153,6 +158,7 @@ public class Window {
                 DebugDraw.draw();
                 currentScene.update(dt);
             }
+            this.frameBuffer.unbind();
 
             this.imGuiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
@@ -182,5 +188,13 @@ public class Window {
 
     public static void setHeight(int height) {
         get().height = height;
+    }
+
+    public static FrameBuffer getFramebuffer() {
+        return get().frameBuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return 16.0f / 9.0f;
     }
 }

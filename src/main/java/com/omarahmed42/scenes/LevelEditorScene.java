@@ -39,7 +39,9 @@ public class LevelEditorScene extends Scene {
         this.camera = new Camera(new Vector2f(-250, 0));
         this.sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
         if (levelLoaded) {
-            this.activeGameObject = gameObjects.get(0);
+            if (gameObjects.size() > 0) {
+                this.activeGameObject = gameObjects.get(0);
+            }
             this.activeGameObject.addComponent(new RigidBody());
             return;
         }
@@ -70,6 +72,15 @@ public class LevelEditorScene extends Scene {
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81,
                         0));
         AssetPool.getTexture("assets/images/blendImage2.png");
+
+        for (GameObject g : gameObjects) {
+            if (g.getComponent(SpriteRenderer.class) != null) {
+                SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
+                if (spr.getTexture() != null) {
+                    spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilePath()));
+                }
+            }
+        }
     }
 
     @Override
@@ -98,18 +109,17 @@ public class LevelEditorScene extends Scene {
         float windowX2 = windowPos.x + windowSize.x;
         for (int i = 0; i < sprites.size(); i++) {
             Sprite sprite = sprites.getSprite(i);
-            float spriteWidth = sprite.getWidth() * 4;
-            float spriteHeight = sprite.getHeight() * 4;
+            float spriteWidth = sprite.getWidth() * 2;
+            float spriteHeight = sprite.getHeight() * 2;
 
             int id = sprite.getTexId();
             Vector2f[] texCoords = sprite.getTexCoords();
 
             ImGui.pushID(i);
-            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y,
-                    texCoords[2].x,
+            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y,
+                    texCoords[0].x,
                     texCoords[2].y)) {
                 GameObject object = Prefabs.generateSpriteObject(sprite, 32, 32);
-                System.out.println("PRESSED");
                 // Attach this to the mouse cursor
                 levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
             }

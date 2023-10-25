@@ -11,11 +11,31 @@ import org.lwjgl.BufferUtils;
 public class Texture {
 
     private String filePath;
-    private int texID;
-    private int width, height;
+    private transient int texID;
+    private int width;
+    private int height;
 
     public Texture() {
+        this.texID = -1;
+        this.width = -1;
+        this.height = -1;
+    }
 
+    public Texture(int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        this.filePath = "Generated";
+
+        // Generate texture on GPU
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                0);
     }
 
     public void init(String filePath) {
