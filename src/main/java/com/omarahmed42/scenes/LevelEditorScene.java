@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import com.omarahmed42.components.EditorCamera;
 import com.omarahmed42.components.GridLines;
 import com.omarahmed42.components.MouseControls;
 import com.omarahmed42.components.RigidBody;
@@ -33,10 +34,11 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        this.camera = new Camera(new Vector2f(-250, 0));
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
+        levelEditorStuff.addComponent(new EditorCamera(this.camera));
         loadResources();
-        this.camera = new Camera(new Vector2f(-250, 0));
         this.sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
     }
 
@@ -60,6 +62,7 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt) {
         levelEditorStuff.update(dt);
+        this.camera.adjustProjection();
         for (GameObject go : this.gameObjects) {
             go.update(dt);
         }
