@@ -11,20 +11,18 @@ import imgui.flag.ImGuiWindowFlags;
 
 public class GameViewWindow {
 
-    private static float leftX;
-    private static float rightX;
-    private static float topY;
-    private static float bottomY;
+    private float leftX;
+    private float rightX;
+    private float topY;
+    private float bottomY;
 
-    public static void imgui() {
+    public void imgui() {
         ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
-        
 
         ImGui.setCursorPos(windowPos.x, windowPos.y);
-
 
         ImVec2 topLeft = new ImVec2();
         ImGui.getCursorScreenPos(topLeft);
@@ -32,10 +30,9 @@ public class GameViewWindow {
         topLeft.y -= ImGui.getScrollY();
 
         leftX = topLeft.x;
-        topY = topLeft.y;
-
+        bottomY = topLeft.y;
         rightX = topLeft.x + windowSize.x;
-        bottomY = topLeft.y + windowSize.y;
+        topY = topLeft.y + windowSize.y;
 
         int textureId = Window.getFramebuffer().getTextureId();
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
@@ -45,7 +42,7 @@ public class GameViewWindow {
         ImGui.end();
     }
 
-    private static ImVec2 getLargestSizeForViewport() {
+    private ImVec2 getLargestSizeForViewport() {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
@@ -62,7 +59,12 @@ public class GameViewWindow {
         return new ImVec2(aspectWidth, aspectHeight);
     }
 
-    private static ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+    public boolean getWantCaptureMouse() {
+        return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX
+                && MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
+    }
+
+    private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
@@ -74,8 +76,4 @@ public class GameViewWindow {
         return new ImVec2(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
     }
 
-    public static boolean getWantCaptureMouse() {
-        return MouseListener.getX() >= leftX && MouseListener.getX() <= rightX
-        && MouseListener.getY() >= bottomY && MouseListener.getY() <= topY;
-    }
 }

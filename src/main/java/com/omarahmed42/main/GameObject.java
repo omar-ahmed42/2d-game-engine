@@ -86,7 +86,7 @@ public class GameObject {
         ID_COUNTER = maxId;
     }
 
-    public int uid() {
+    public int getUid() {
         return this.uid;
     }
 

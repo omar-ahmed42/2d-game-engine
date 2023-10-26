@@ -20,6 +20,8 @@ import imgui.type.ImBoolean;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.omarahmed42.editor.GameViewWindow;
+import com.omarahmed42.editor.PropertiesWindow;
+import com.omarahmed42.renderer.PickingTexture;
 import com.omarahmed42.scenes.Scene;
 
 public class ImGuiLayer {
@@ -32,8 +34,13 @@ public class ImGuiLayer {
     // LWJGL3 renderer (SHOULD be initialized)
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-    public ImGuiLayer(long glfwWindow) {
+    private GameViewWindow gameViewWindow;
+    private PropertiesWindow propertiesWindow;
+
+    public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
+        this.gameViewWindow = new GameViewWindow();
+        this.propertiesWindow = new PropertiesWindow(pickingTexture);
     }
 
     // Initialize Dear ImGui.
@@ -133,7 +140,7 @@ public class ImGuiLayer {
                 ImGui.setWindowFocus(null);
             }
 
-            if (!io.getWantCaptureMouse() || !GameViewWindow.getWantCaptureMouse()) {
+            if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseButtonCallback(w, button, action, mods);
             }
         });
@@ -220,10 +227,12 @@ public class ImGuiLayer {
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame();
         setupDockspace();
-        currentScene.sceneImgui();
+        currentScene.imgui();
         ImGui.end();
         ImGui.showDemoWindow();
-        GameViewWindow.imgui();
+        gameViewWindow.imgui();
+        propertiesWindow.update(dt, currentScene);
+        propertiesWindow.imgui();
         ImGui.render();
 
         endFrame();
