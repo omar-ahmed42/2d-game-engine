@@ -50,6 +50,7 @@ public abstract class Scene {
     }
 
     public abstract void update(float dt);
+
     public abstract void render();
 
     public Camera camera() {
@@ -66,7 +67,14 @@ public abstract class Scene {
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();
 
         try (FileWriter writer = new FileWriter("level.txt")) {
-            writer.write(gson.toJson(this.gameObjects));
+            List<GameObject> objsToSerialize = new ArrayList<>();
+            for (GameObject obj : this.gameObjects) {
+                if (obj.doSerialization()) {
+                    objsToSerialize.add(obj);
+                }
+            }
+
+            writer.write(gson.toJson(objsToSerialize));
         } catch (IOException e) {
             e.printStackTrace();
         }

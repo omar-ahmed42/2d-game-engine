@@ -1,13 +1,11 @@
 package com.omarahmed42.scenes;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import com.omarahmed42.components.EditorCamera;
+import com.omarahmed42.components.GizmoSystem;
 import com.omarahmed42.components.GridLines;
 import com.omarahmed42.components.MouseControls;
-import com.omarahmed42.components.RigidBody;
 import com.omarahmed42.components.Sprite;
 import com.omarahmed42.components.SpriteRenderer;
 import com.omarahmed42.components.Spritesheet;
@@ -15,7 +13,6 @@ import com.omarahmed42.main.Camera;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.Prefabs;
 import com.omarahmed42.main.Transform;
-import com.omarahmed42.renderer.DebugDraw;
 import com.omarahmed42.util.AssetPool;
 
 import imgui.ImGui;
@@ -34,12 +31,17 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
+        loadResources();
+        this.sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
+        Spritesheet gizmos = AssetPool.getSpritesheet("assets/images/gizmos.png");
+
         this.camera = new Camera(new Vector2f(-250, 0));
+
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(this.camera));
-        loadResources();
-        this.sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
+        levelEditorStuff.addComponent(new GizmoSystem(gizmos));
+        levelEditorStuff.start();
     }
 
     private void loadResources() {
@@ -47,6 +49,9 @@ public class LevelEditorScene extends Scene {
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81,
                         0));
+        AssetPool.addSpritesheet("assets/images/gizmos.png",
+                new Spritesheet(
+                        AssetPool.getTexture("assets/images/gizmos.png"), 24, 48, 3, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
 
         for (GameObject g : gameObjects) {
@@ -75,6 +80,10 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void imgui() {
+        ImGui.begin("Level Editor Stuff");
+        levelEditorStuff.imgui();
+        ImGui.end();
+
         ImGui.begin("Test window");
 
         ImVec2 windowPos = new ImVec2();

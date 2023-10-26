@@ -291,4 +291,8 @@ public class ImGuiLayer {
         ImGui.destroyContext();
     }
 
+    public PropertiesWindow getPropertiesWindow() {
+        return this.propertiesWindow;
+    }
+
 }
