@@ -12,7 +12,6 @@ import com.omarahmed42.components.Spritesheet;
 import com.omarahmed42.main.Camera;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.Prefabs;
-import com.omarahmed42.main.Transform;
 import com.omarahmed42.util.AssetPool;
 
 import imgui.ImGui;
@@ -20,11 +19,9 @@ import imgui.ImVec2;
 
 public class LevelEditorScene extends Scene {
 
-    private GameObject obj1;
     private Spritesheet sprites;
-    private SpriteRenderer obj1SpriteRenderer;
 
-    GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
 
     public LevelEditorScene() {
     }

@@ -14,6 +14,7 @@ import com.omarahmed42.components.ComponentDeserializer;
 import com.omarahmed42.main.Camera;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.GameObjectDeserializer;
+import com.omarahmed42.main.Transform;
 import com.omarahmed42.renderer.Renderer;
 
 public abstract class Scene {
@@ -59,6 +60,13 @@ public abstract class Scene {
 
     public void imgui() {
 
+    }
+
+    public GameObject createGameObject(String name) {
+        GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
+        return go;
     }
 
     public void saveExist() {
