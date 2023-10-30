@@ -21,6 +21,10 @@ public abstract class Component {
     public void start() {
 
     }
+    
+    public void editorUpdate(float dt) {
+        
+    }
 
     public void update(float dt) {
 
@@ -77,6 +81,9 @@ public abstract class Component {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void destroy() {
     }
 
     public void generateId() {

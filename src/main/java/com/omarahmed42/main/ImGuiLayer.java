@@ -20,6 +20,7 @@ import imgui.type.ImBoolean;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.omarahmed42.editor.GameViewWindow;
+import com.omarahmed42.editor.MenuBar;
 import com.omarahmed42.editor.PropertiesWindow;
 import com.omarahmed42.renderer.PickingTexture;
 import com.omarahmed42.scenes.Scene;
@@ -36,11 +37,13 @@ public class ImGuiLayer {
 
     private GameViewWindow gameViewWindow;
     private PropertiesWindow propertiesWindow;
+    private MenuBar menuBar;
 
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.gameViewWindow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);
+        this.menuBar = new MenuBar();
     }
 
     // Initialize Dear ImGui.
@@ -234,6 +237,7 @@ public class ImGuiLayer {
         gameViewWindow.imgui();
         propertiesWindow.update(dt, currentScene);
         propertiesWindow.imgui();
+        menuBar.imgui();
         ImGui.render();
 
         endFrame();

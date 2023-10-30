@@ -4,6 +4,9 @@ import org.joml.Vector2f;
 
 import com.omarahmed42.main.MouseListener;
 import com.omarahmed42.main.Window;
+import com.omarahmed42.observers.EventSystem;
+import com.omarahmed42.observers.events.Event;
+import com.omarahmed42.observers.events.EventType;
 
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -15,10 +18,23 @@ public class GameViewWindow {
     private float rightX;
     private float topY;
     private float bottomY;
+    private boolean isPlaying = false;
 
     public void imgui() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse |
+                ImGuiWindowFlags.MenuBar);
 
+        ImGui.beginMenuBar();
+        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
+            isPlaying = true;
+            EventSystem.notify(null, new Event(EventType.GameEngineStartPlay));
+        }
+
+        if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
+            isPlaying = false;
+            EventSystem.notify(null, new Event(EventType.GameEngineStopPlay));
+        }
+        ImGui.endMenuBar();
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
 

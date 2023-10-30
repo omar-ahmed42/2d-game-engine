@@ -1,8 +1,8 @@
 package com.omarahmed42.renderer;
 
 import com.omarahmed42.components.SpriteRenderer;
+import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.Window;
-import com.omarahmed42.util.AssetPool;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -289,5 +289,21 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     public int zIndex() {
         return zIndex;
+    }
+
+    public boolean destroyIfExists(GameObject go) {
+        SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i] == sprite) {
+                // Remove this sprite by overriding everything (shifting)
+                for (int j = i; j < numSprites - 1; j++) {
+                    sprites[j] = sprites[j + 1];
+                    sprites[j].setDirty();
+                }
+                numSprites--;
+                return true;
+            }
+        }
+        return false;
     }
 }

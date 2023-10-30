@@ -9,7 +9,6 @@ import com.omarahmed42.components.MouseControls;
 import com.omarahmed42.components.Sprite;
 import com.omarahmed42.components.SpriteRenderer;
 import com.omarahmed42.components.Spritesheet;
-import com.omarahmed42.main.Camera;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.Prefabs;
 import com.omarahmed42.util.AssetPool;
@@ -17,31 +16,31 @@ import com.omarahmed42.util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
 
-public class LevelEditorScene extends Scene {
+public class LevelEditorSceneInitializer extends SceneInitializer {
 
     private Spritesheet sprites;
 
-    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
+    private GameObject levelEditorStuff;
 
-    public LevelEditorScene() {
+    public LevelEditorSceneInitializer() {
     }
 
     @Override
-    public void init() {
-        loadResources();
+    public void init(Scene scene) {
         this.sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
         Spritesheet gizmos = AssetPool.getSpritesheet("assets/images/gizmos.png");
 
-        this.camera = new Camera(new Vector2f(-250, 0));
-
+        levelEditorStuff = scene.createGameObject("LevelEditor");
+        levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
-        levelEditorStuff.addComponent(new EditorCamera(this.camera));
+        levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
-        levelEditorStuff.start();
+        scene.addGameObjectToScene(levelEditorStuff);
     }
 
-    private void loadResources() {
+    @Override
+    public void loadResources(Scene scene) {
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"), 16, 16, 81,
@@ -51,7 +50,7 @@ public class LevelEditorScene extends Scene {
                         AssetPool.getTexture("assets/images/gizmos.png"), 24, 48, 3, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
 
-        for (GameObject g : gameObjects) {
+        for (GameObject g : scene.getGameObjects()) {
             if (g.getComponent(SpriteRenderer.class) != null) {
                 SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
                 if (spr.getTexture() != null) {
@@ -59,20 +58,6 @@ public class LevelEditorScene extends Scene {
                 }
             }
         }
-    }
-
-    @Override
-    public void update(float dt) {
-        levelEditorStuff.update(dt);
-        this.camera.adjustProjection();
-        for (GameObject go : this.gameObjects) {
-            go.update(dt);
-        }
-    }
-
-    @Override
-    public void render() {
-        this.renderer.render();
     }
 
     @Override
