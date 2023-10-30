@@ -3,7 +3,12 @@ package com.omarahmed42.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.omarahmed42.components.Component;
+import com.omarahmed42.components.ComponentDeserializer;
+import com.omarahmed42.components.SpriteRenderer;
+import com.omarahmed42.util.AssetPool;
 
 import imgui.ImGui;
 
@@ -108,5 +113,28 @@ public class GameObject {
 
     public boolean isDead() {
         return this.isDead;
+    }
+
+    public void generateUid() {
+        this.uid = ID_COUNTER++;
+    }
+
+    public GameObject copy() {
+        Gson gson = new GsonBuilder().setPrettyPrinting()
+                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()).create();
+        String objAsJsn = gson.toJson(this);
+        GameObject obj = gson.fromJson(objAsJsn, GameObject.class);
+        obj.generateUid();
+        for (Component c : obj.getAllComponents()) {
+            c.generateId();
+        }
+
+        SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
+        if (sprite != null && sprite.getTexture() != null) {
+            sprite.setTexture(AssetPool.getTexture(sprite.getTexture().getFilePath()));
+        }
+
+        return obj;
     }
 }

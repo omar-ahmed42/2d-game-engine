@@ -1,11 +1,16 @@
 package com.omarahmed42.components;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
+
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 import com.omarahmed42.editor.PropertiesWindow;
 import com.omarahmed42.main.GameObject;
+import com.omarahmed42.main.KeyListener;
 import com.omarahmed42.main.MouseListener;
 import com.omarahmed42.main.Prefabs;
 import com.omarahmed42.main.Window;
@@ -26,11 +31,11 @@ public class Gizmo extends Component {
 
     protected GameObject activeGameObject = null;
 
-    private Vector2f xAxisOffset = new Vector2f(-2, 0);
-    private Vector2f yAxisOffset = new Vector2f(25, -2);
+    private Vector2f xAxisOffset = new Vector2f(24f / 80f, -6f / 80f);
+    private Vector2f yAxisOffset = new Vector2f(-7f / 80f, 21f / 80f);
 
-    private int gizmoWidth = 16;
-    private int gizmoHeight = 48;
+    private float gizmoWidth = 16f / 80f;
+    private float gizmoHeight = 48f / 80f;
 
     protected boolean xAxisActive = false;
     protected boolean yAxisActive = false;
@@ -40,8 +45,8 @@ public class Gizmo extends Component {
     private PropertiesWindow propertiesWindow;
 
     public Gizmo(Sprite arrowSprite, PropertiesWindow propertiesWindow) {
-        this.xAxisObject = Prefabs.generateSpriteObject(arrowSprite, 16, 48);
-        this.yAxisObject = Prefabs.generateSpriteObject(arrowSprite, 16, 48);
+        this.xAxisObject = Prefabs.generateSpriteObject(arrowSprite, gizmoWidth, gizmoHeight);
+        this.yAxisObject = Prefabs.generateSpriteObject(arrowSprite, gizmoWidth, gizmoHeight);
 
         this.xAxisSprite = this.xAxisObject.getComponent(SpriteRenderer.class);
         this.yAxisSprite = this.yAxisObject.getComponent(SpriteRenderer.class);
@@ -79,6 +84,18 @@ public class Gizmo extends Component {
         this.activeGameObject = this.propertiesWindow.getActiveGameObject();
         if (this.activeGameObject != null) {
             this.setActive();
+            if (KeyListener.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && KeyListener.keyBeginPress(GLFW_KEY_D)) {
+                GameObject newObj = this.activeGameObject.copy();
+                Window.getScene().addGameObjectToScene(newObj);
+                newObj.transform.position.add(0.1f, 0.1f);
+                this.propertiesWindow.setActiveGameObject(newObj);
+                return;
+            } else if (KeyListener.keyBeginPress(GLFW_KEY_DELETE)) {
+                activeGameObject.destroy();
+                this.setInactive();
+                this.propertiesWindow.setActiveGameObject(null);
+                return;
+            }
         } else {
             this.setInactive();
             return;
@@ -121,10 +138,10 @@ public class Gizmo extends Component {
 
     private boolean checkXHoverState() {
         Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
-        if (mousePos.x <= xAxisObject.transform.position.x
-                && mousePos.x >= xAxisObject.transform.position.x - gizmoHeight
-                && mousePos.y >= yAxisObject.transform.position.y
-                && mousePos.y <= yAxisObject.transform.position.y + gizmoWidth) {
+        if (mousePos.x <= xAxisObject.transform.position.x + (gizmoHeight / 2.0f)
+                && mousePos.x >= xAxisObject.transform.position.x - (gizmoWidth / 2.0f)
+                && mousePos.y >= xAxisObject.transform.position.y - (gizmoHeight / 2.0f)
+                && mousePos.y <= xAxisObject.transform.position.y + (gizmoWidth / 2.0f)) {
             xAxisSprite.setColor(xAxisColorHover);
             return true;
         }
@@ -135,10 +152,10 @@ public class Gizmo extends Component {
 
     private boolean checkYHoverState() {
         Vector2f mousePos = new Vector2f(MouseListener.getOrthoX(), MouseListener.getOrthoY());
-        if (mousePos.x <= yAxisObject.transform.position.x
-                && mousePos.x >= yAxisObject.transform.position.x - gizmoWidth
-                && mousePos.y <= yAxisObject.transform.position.y
-                && mousePos.y >= yAxisObject.transform.position.y - gizmoHeight) {
+        if (mousePos.x <= yAxisObject.transform.position.x + (gizmoWidth / 2.0f)
+                && mousePos.x >= yAxisObject.transform.position.x - (gizmoWidth / 2.0f)
+                && mousePos.y <= yAxisObject.transform.position.y + (gizmoHeight / 2.0f)
+                && mousePos.y >= yAxisObject.transform.position.y - (gizmoHeight / 2.0f)) {
             yAxisSprite.setColor(yAxisColorHover);
             return true;
         }
