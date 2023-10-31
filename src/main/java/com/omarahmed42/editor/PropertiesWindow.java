@@ -4,6 +4,9 @@ package com.omarahmed42.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector4f;
+
+import com.omarahmed42.components.SpriteRenderer;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.physics2d.components.Box2DCollider;
 import com.omarahmed42.physics2d.components.CircleCollider;
@@ -14,12 +17,14 @@ import imgui.ImGui;
 
 public class PropertiesWindow {
     private List<GameObject> activeGameObjects;
+    private List<Vector4f> activeGameObjectsOgColor;
     private GameObject activeGameObject = null;
     private PickingTexture pickingTexture;
 
     public PropertiesWindow(PickingTexture pickingTexture) {
         this.activeGameObjects = new ArrayList<>();
         this.pickingTexture = pickingTexture;
+        this.activeGameObjectsOgColor = new ArrayList<>();
     }
 
     public void imgui() {
@@ -66,6 +71,13 @@ public class PropertiesWindow {
     }
 
     public void addActiveGameObject(GameObject go) {
+        SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+        if (spr != null) {
+            this.activeGameObjectsOgColor.add(new Vector4f(spr.getColor()));
+            spr.setColor(new Vector4f(0.8f, 0.8f, 0.0f, 0.8f));
+        } else {
+            this.activeGameObjectsOgColor.add(new Vector4f());
+        }
         this.activeGameObjects.add(go);
     }
 
@@ -74,7 +86,18 @@ public class PropertiesWindow {
     }
 
     public void clearSelected() {
+        if (activeGameObjectsOgColor.size() > 0) {
+            int i = 0;
+            for (GameObject go : activeGameObjects) {
+                SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+                if (spr != null) {
+                    spr.setColor(activeGameObjectsOgColor.get(i));
+                }
+                i++;
+            }
+        }
         this.activeGameObjects.clear();
+        this.activeGameObjectsOgColor.clear();
     }
 
     public PickingTexture getPickingTexture() {
