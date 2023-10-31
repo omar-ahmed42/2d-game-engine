@@ -188,7 +188,7 @@ public class DebugDraw {
         int currentAngle = 0;
 
         for (int i = 0; i < points.length; i++) {
-            Vector2f tmp = new Vector2f(radius, 0);
+            Vector2f tmp = new Vector2f(0, radius);
             JMath.rotate(tmp, currentAngle, new Vector2f());
             points[i] = new Vector2f(tmp).add(center);
 

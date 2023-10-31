@@ -26,7 +26,7 @@ public class KeyListener {
             get().keyBeginPress[key] = true;
         } else if (action == GLFW_RELEASE) {
             get().keyPressed[key] = false;
-            get().keyBeginPress[key] = true;
+            get().keyBeginPress[key] = false;
         }
 
     }

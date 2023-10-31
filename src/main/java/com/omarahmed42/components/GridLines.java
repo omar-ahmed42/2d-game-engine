@@ -17,8 +17,8 @@ public class GridLines extends Component {
         Vector2f cameraPos = camera.position;
         Vector2f projectionSize = camera.getProjectionSize();
 
-        float firstX = ((int) (cameraPos.x / Settings.GRID_WIDTH) - 1) * Settings.GRID_WIDTH;
-        float firstY = ((int) (cameraPos.y / Settings.GRID_HEIGHT) - 1) * Settings.GRID_HEIGHT;
+        float firstX = ((int) Math.floor(cameraPos.x / Settings.GRID_WIDTH) - 1) * Settings.GRID_HEIGHT;
+        float firstY = ((int) Math.floor(cameraPos.y / Settings.GRID_HEIGHT) - 1) * Settings.GRID_HEIGHT;
 
         int numVtLines = (int) (projectionSize.x * camera.getZoom() / Settings.GRID_WIDTH) + 2;
         int numHzLines = (int) (projectionSize.y * camera.getZoom() / Settings.GRID_HEIGHT) + 2;
@@ -32,11 +32,11 @@ public class GridLines extends Component {
             float x = firstX + (Settings.GRID_WIDTH * i);
             float y = firstY + (Settings.GRID_HEIGHT * i);
             if (i < numVtLines) {
-                DebugDraw.addLine2D(new Vector2f(x, firstY), new Vector2f(x, y + height), color);
+                DebugDraw.addLine2D(new Vector2f(x, firstY), new Vector2f(x, firstY + height), color);
             }
 
             if (i < numHzLines) {
-                DebugDraw.addLine2D(new Vector2f(firstX, y), new Vector2f(x + width, y), color);
+                DebugDraw.addLine2D(new Vector2f(firstX, y), new Vector2f(firstX + width, y), color);
             }
         }
 

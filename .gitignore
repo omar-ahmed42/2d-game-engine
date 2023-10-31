@@ -264,5 +264,6 @@ buildNumber.properties
 
 assets/images/*
 assets/fonts/*
+assets/sounds/*
 *.ini
 *.txt

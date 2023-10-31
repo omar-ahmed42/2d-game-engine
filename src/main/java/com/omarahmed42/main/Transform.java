@@ -21,12 +21,12 @@ public class Transform extends Component {
 
     public Transform(Vector2f position, Vector2f scale) {
         init(position, scale);
-        this.zIndex = 0;
     }
-
+    
     public void init(Vector2f position, Vector2f scale) {
         this.position = position;
         this.scale = scale;
+        this.zIndex = 0;
     }
 
     public Transform copy() {

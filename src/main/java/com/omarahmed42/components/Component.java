@@ -57,7 +57,6 @@ public abstract class Component {
                     field.set(this, JImGui.dragFloat(name, val));
                 } else if (type == boolean.class) {
                     boolean val = (boolean) value;
-                    boolean[] imBool = { val };
                     if (ImGui.checkbox(name + ": ", val)) {
                         field.set(this, !val);
                     }
