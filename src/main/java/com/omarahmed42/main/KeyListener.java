@@ -3,6 +3,8 @@ package com.omarahmed42.main;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+import java.util.Arrays;
+
 public class KeyListener {
     private static KeyListener instance;
     private boolean keyPressed[] = new boolean[350];
@@ -10,6 +12,10 @@ public class KeyListener {
 
     private KeyListener() {
 
+    }
+
+    public static void endFrame() {
+        Arrays.fill(get().keyBeginPress, false);
     }
 
     public static KeyListener get() {
@@ -36,9 +42,6 @@ public class KeyListener {
     }
 
     public static boolean keyBeginPress(int keyCode) {
-        boolean result = get().keyBeginPress[keyCode];
-        if (result)
-            get().keyBeginPress[keyCode] = false;
-        return result;
+        return get().keyBeginPress[keyCode];
     }
 }

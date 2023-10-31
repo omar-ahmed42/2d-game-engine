@@ -210,6 +210,7 @@ public class Window implements Observer {
             this.frameBuffer.unbind();
 
             this.imGuiLayer.update(dt, currentScene);
+            KeyListener.endFrame();
             MouseListener.endFrame();
             glfwSwapBuffers(glfwWindow);
 
