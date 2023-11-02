@@ -1,12 +1,11 @@
 package com.omarahmed42.main;
 
-import javax.swing.Box;
-
 import org.joml.Vector2f;
 
 import com.omarahmed42.components.AnimationState;
 import com.omarahmed42.components.BlockCoin;
 import com.omarahmed42.components.Flower;
+import com.omarahmed42.components.GoombaAI;
 import com.omarahmed42.components.Ground;
 import com.omarahmed42.components.MushroomAI;
 import com.omarahmed42.components.PlayerController;
@@ -313,5 +312,41 @@ public class Prefabs {
         flower.addComponent(new Flower());
 
         return flower;
+    }
+
+    public static GameObject generateGoomba() {
+        Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+        GameObject goomba = generateSpriteObject(sprites.getSprite(14), 0.25f, 0.25f);
+
+        AnimationState walk = new AnimationState();
+        walk.title = "Walk";
+        float defaultFrameTime = 0.23f;
+        walk.addFrame(sprites.getSprite(14), defaultFrameTime);
+        walk.addFrame(sprites.getSprite(15), defaultFrameTime);
+        walk.setLoop(true);
+
+        AnimationState squashed = new AnimationState();
+        squashed.title = "Squashed";
+        squashed.addFrame(sprites.getSprite(16), 0.1f);
+
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(walk);
+        stateMachine.addState(squashed);
+        stateMachine.setDefaultState(walk.title);
+        stateMachine.addState(walk.title, squashed.title, "squashMe");
+        goomba.addComponent(stateMachine);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setMass(0.1f);
+        rb.setFixedRotation(true);
+        goomba.addComponent(rb);
+        CircleCollider circle = new CircleCollider();
+        circle.setRadius(0.12f);
+        goomba.addComponent(circle);
+
+        goomba.addComponent(new GoombaAI());
+
+        return goomba;
     }
 }
