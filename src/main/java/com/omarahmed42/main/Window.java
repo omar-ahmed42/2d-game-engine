@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL;
 import com.omarahmed42.observers.EventSystem;
 import com.omarahmed42.observers.Observer;
 import com.omarahmed42.observers.events.Event;
+import com.omarahmed42.physics2d.Physics2D;
 import com.omarahmed42.renderer.DebugDraw;
 import com.omarahmed42.renderer.FrameBuffer;
 import com.omarahmed42.renderer.PickingTexture;
@@ -272,6 +273,10 @@ public class Window implements Observer {
                 currentScene.save();
                 break;
         }
+    }
+
+    public static Physics2D getPhysics() {
+        return currentScene.getPhysics();
     }
 
     

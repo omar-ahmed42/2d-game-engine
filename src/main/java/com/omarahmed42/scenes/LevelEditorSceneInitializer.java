@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import com.omarahmed42.components.EditorCamera;
 import com.omarahmed42.components.GizmoSystem;
 import com.omarahmed42.components.GridLines;
+import com.omarahmed42.components.Ground;
 import com.omarahmed42.components.KeyControls;
 import com.omarahmed42.components.MouseControls;
 import com.omarahmed42.components.Sprite;
@@ -17,6 +18,9 @@ import com.omarahmed42.components.StateMachine;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.Prefabs;
 import com.omarahmed42.main.Sound;
+import com.omarahmed42.physics2d.components.Box2DCollider;
+import com.omarahmed42.physics2d.components.RigidBody2D;
+import com.omarahmed42.physics2d.enums.BodyType;
 import com.omarahmed42.util.AssetPool;
 
 import imgui.ImGui;
@@ -56,6 +60,16 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
         AssetPool.addSpritesheet("assets/images/spritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"), 16, 16, 26,
                         0));
+
+        AssetPool.addSpritesheet("assets/images/turtle.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/turtle.png"),
+                        16, 24, 4, 0));
+        AssetPool.addSpritesheet("assets/images/bigSpritesheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/bigSpritesheet.png"),
+                        16, 32, 42, 0));
+        AssetPool.addSpritesheet("assets/images/pipes.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/pipes.png"),
+                        32, 32, 4, 0));
 
         AssetPool.addSpritesheet("assets/images/items.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/items.png"), 16, 16, 43,
@@ -118,6 +132,9 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
 
                 float windowX2 = windowPos.x + windowSize.x;
                 for (int i = 0; i < sprites.size(); i++) {
+                    if (i == 34) continue;
+                    if (i >= 38 && i < 61) continue;
+
                     Sprite sprite = sprites.getSprite(i);
                     float spriteWidth = sprite.getWidth() * 2;
                     float spriteHeight = sprite.getHeight() * 2;
@@ -130,6 +147,16 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                             texCoords[0].x,
                             texCoords[2].y)) {
                         GameObject object = Prefabs.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        RigidBody2D rb = new RigidBody2D();
+                        rb.setBodyType(BodyType.Static);
+                        object.addComponent(rb);
+                        Box2DCollider b2d = new Box2DCollider();
+                        b2d.setHalfSize(new Vector2f(0.25f, 0.25f));
+                        object.addComponent(b2d);
+                        object.addComponent(new Ground());
+                        if (i == 12) {
+                            // object.addComponent(new BreakableBrick());
+                        }
                         // Attach this to the mouse cursor
                         levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
                     }
