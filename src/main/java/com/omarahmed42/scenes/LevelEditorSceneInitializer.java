@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.joml.Vector2f;
 
+import com.omarahmed42.components.BreakableBrick;
 import com.omarahmed42.components.EditorCamera;
 import com.omarahmed42.components.GizmoSystem;
 import com.omarahmed42.components.GridLines;
@@ -155,7 +156,7 @@ public class LevelEditorSceneInitializer extends SceneInitializer {
                         object.addComponent(b2d);
                         object.addComponent(new Ground());
                         if (i == 12) {
-                            // object.addComponent(new BreakableBrick());
+                            object.addComponent(new BreakableBrick());
                         }
                         // Attach this to the mouse cursor
                         levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
