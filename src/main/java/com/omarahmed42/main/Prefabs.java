@@ -6,7 +6,9 @@ import org.joml.Vector2f;
 
 import com.omarahmed42.components.AnimationState;
 import com.omarahmed42.components.BlockCoin;
+import com.omarahmed42.components.Flower;
 import com.omarahmed42.components.Ground;
+import com.omarahmed42.components.MushroomAI;
 import com.omarahmed42.components.PlayerController;
 import com.omarahmed42.components.QuestionBlock;
 import com.omarahmed42.components.Sprite;
@@ -14,6 +16,7 @@ import com.omarahmed42.components.SpriteRenderer;
 import com.omarahmed42.components.Spritesheet;
 import com.omarahmed42.components.StateMachine;
 import com.omarahmed42.physics2d.components.Box2DCollider;
+import com.omarahmed42.physics2d.components.CircleCollider;
 import com.omarahmed42.physics2d.components.PillboxCollider;
 import com.omarahmed42.physics2d.components.RigidBody2D;
 import com.omarahmed42.physics2d.enums.BodyType;
@@ -274,5 +277,41 @@ public class Prefabs {
         coin.addComponent(new BlockCoin());
         
         return coin;
+    }
+
+    public static GameObject generateMushroom() {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject mushroom = generateSpriteObject(items.getSprite(10), 0.25f, 0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        mushroom.addComponent(rb);
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.14f);
+        mushroom.addComponent(circleCollider);
+        mushroom.addComponent(new MushroomAI());
+
+        return mushroom;
+    }
+
+    public static GameObject generateFlower() {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject flower = generateSpriteObject(items.getSprite(20), 0.25f, 0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Static);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        flower.addComponent(rb);
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.14f);
+        flower.addComponent(circleCollider);
+        flower.addComponent(new Flower());
+
+        return flower;
     }
 }

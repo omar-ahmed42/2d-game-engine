@@ -7,6 +7,7 @@ import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.KeyListener;
 import com.omarahmed42.main.Window;
 import com.omarahmed42.physics2d.RaycastInfo;
+import com.omarahmed42.physics2d.components.PillboxCollider;
 import com.omarahmed42.physics2d.components.RigidBody2D;
 import com.omarahmed42.renderer.DebugDraw;
 import com.omarahmed42.util.AssetPool;
@@ -174,5 +175,23 @@ public class PlayerController extends Component {
 
     public boolean isSmall() {
         return this.playerState == PlayerState.Small;
+    }
+
+    public void powerUp() {
+        if (playerState == PlayerState.Small) {
+            playerState = PlayerState.Big;
+            AssetPool.getSound("assets/sounds/powerup.ogg").play();
+            gameObject.transform.scale.y = 0.42f;
+            PillboxCollider pb = gameObject.getComponent(PillboxCollider.class);
+            if (pb != null) {
+                jumpBoost *= bigJumpBoostFactor;
+                walkSpeed *= bigJumpBoostFactor;
+                pb.setHeight(0.63f);
+            }
+        } else if (playerState == PlayerState.Big) {
+            playerState = PlayerState.Fire;
+            AssetPool.getSound("assets/sounds/powerup.ogg").play();
+        }
+        stateMachine.trigger("powerup");
     }
 }
