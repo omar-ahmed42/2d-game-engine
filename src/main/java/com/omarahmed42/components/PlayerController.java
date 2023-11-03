@@ -18,6 +18,7 @@ import com.omarahmed42.physics2d.components.PillboxCollider;
 import com.omarahmed42.physics2d.components.RigidBody2D;
 import com.omarahmed42.physics2d.enums.BodyType;
 import com.omarahmed42.scenes.LevelEditorSceneInitializer;
+import com.omarahmed42.scenes.LevelSceneInitializer;
 import com.omarahmed42.util.AssetPool;
 
 public class PlayerController extends Component {
@@ -84,7 +85,7 @@ public class PlayerController extends Component {
                 this.rb.setVelocity(this.velocity);
                 this.rb.setAngularVelocity(0);
             } else if (!deadGoingUp && gameObject.transform.position.y <= deadMinHeight) {
-                Window.changeScene(new LevelEditorSceneInitializer());
+                Window.changeScene(new LevelSceneInitializer());
             }
             return;
         }
@@ -285,5 +286,9 @@ public class PlayerController extends Component {
     public void setPosition(Vector2f newPos) {
         this.gameObject.transform.position.set(newPos);
         this.rb.setPosition(newPos);
+    }
+
+    public boolean hasWon() {
+        return false;
     }
 }

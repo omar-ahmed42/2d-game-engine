@@ -18,11 +18,14 @@ import com.omarahmed42.renderer.PickingTexture;
 import com.omarahmed42.renderer.Renderer;
 import com.omarahmed42.renderer.Shader;
 import com.omarahmed42.scenes.LevelEditorSceneInitializer;
+import com.omarahmed42.scenes.LevelSceneInitializer;
 import com.omarahmed42.scenes.Scene;
 import com.omarahmed42.scenes.SceneInitializer;
 import com.omarahmed42.util.AssetPool;
 
 import static org.lwjgl.system.MemoryUtil.*;
+
+import org.joml.Vector4f;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -182,7 +185,7 @@ public class Window implements Observer {
             pickingTexture.enableWriting();
             
             glViewport(0, 0, 1920, 1017);
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClearColor(0, 0, 0, 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -195,7 +198,8 @@ public class Window implements Observer {
             DebugDraw.beginFrame();
 
             this.frameBuffer.bind();
-            glClearColor(1, 1, 1, 1);
+            Vector4f clearColor = currentScene.camera().clearColor;
+            glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if (dt >= 0){
@@ -260,7 +264,7 @@ public class Window implements Observer {
             case GameEngineStartPlay:
                 this.runtimePlaying = true;
                 currentScene.save();
-                Window.changeScene(new LevelEditorSceneInitializer());
+                Window.changeScene(new LevelSceneInitializer());
                 break;
             case GameEngineStopPlay:
                 this.runtimePlaying = false;

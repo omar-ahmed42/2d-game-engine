@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.omarahmed42.components.Component;
 import com.omarahmed42.components.ComponentDeserializer;
+import com.omarahmed42.components.PlayerController;
 import com.omarahmed42.main.Camera;
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.GameObjectDeserializer;
@@ -219,5 +220,15 @@ public class Scene {
 
     public Physics2D getPhysics() {
         return this.physics2D;
+    }
+
+    public <T extends Component> GameObject getGameObjectWith(Class<T> clazz) {
+        for (GameObject go : gameObjects) {
+            if (go.getComponent(clazz) != null) {
+                return go;
+            }
+        }
+
+        return null;
     }
 }
