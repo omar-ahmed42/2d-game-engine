@@ -15,6 +15,7 @@ import com.omarahmed42.components.Sprite;
 import com.omarahmed42.components.SpriteRenderer;
 import com.omarahmed42.components.Spritesheet;
 import com.omarahmed42.components.StateMachine;
+import com.omarahmed42.components.TurtleAI;
 import com.omarahmed42.physics2d.components.Box2DCollider;
 import com.omarahmed42.physics2d.components.CircleCollider;
 import com.omarahmed42.physics2d.components.PillboxCollider;
@@ -376,5 +377,42 @@ public class Prefabs {
         pipe.addComponent(new Pipe(direction));
         pipe.addComponent(new Ground());
         return pipe;
+    }
+
+    public static GameObject generateTurtle() {
+        Spritesheet turtleSprites = AssetPool.getSpritesheet("assets/images/turtle.png");
+        GameObject turtle = generateSpriteObject(turtleSprites.getSprite(0), 0.25f, 0.35f);
+
+        AnimationState walk = new AnimationState();
+        walk.title = "Walk";
+        float defaultFrameTime = 0.23f;
+        walk.addFrame(turtleSprites.getSprite(0), defaultFrameTime);
+        walk.addFrame(turtleSprites.getSprite(1), defaultFrameTime);
+        walk.setLoop(true);
+
+        AnimationState turtleShellSpin = new AnimationState();
+        turtleShellSpin.title = "TurtleShellSpin";
+        turtleShellSpin.addFrame(turtleSprites.getSprite(2), 0.1f);
+
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(walk);
+        stateMachine.addState(turtleShellSpin);
+        stateMachine.setDefaultState(walk.title);
+        stateMachine.addState(walk.title, turtleShellSpin.title, "squashMe");
+        turtle.addComponent(stateMachine);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setMass(0.1f);
+        rb.setFixedRotation(true);
+        turtle.addComponent(rb);
+        CircleCollider circle = new CircleCollider();
+        circle.setRadius(0.12f);
+        circle.setOffset(new Vector2f(0, -0.05f));
+        turtle.addComponent(circle);
+
+        turtle.addComponent(new TurtleAI());
+
+        return turtle;
     }
 }

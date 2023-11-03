@@ -90,7 +90,7 @@ public class GoombaAI extends Component {
         }
     }
 
-    private void stomp() {
+    public void stomp() {
         stomp(true);
     }
 
