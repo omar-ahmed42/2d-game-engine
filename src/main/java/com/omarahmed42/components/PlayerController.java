@@ -281,4 +281,9 @@ public class PlayerController extends Component {
             AssetPool.getSound("assets/sounds/pipe.ogg").play();
         }
     }
+
+    public void setPosition(Vector2f newPos) {
+        this.gameObject.transform.position.set(newPos);
+        this.rb.setPosition(newPos);
+    }
 }

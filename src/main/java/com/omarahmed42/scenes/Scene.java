@@ -199,6 +199,14 @@ public class Scene {
                 .orElse(null);
     }
 
+
+    public GameObject getGameObject(String gameObjectName) {
+        return this.gameObjects.stream()
+                .filter(gameObject -> gameObject.name.equals(gameObjectName))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void destroy() {
         for (GameObject go : gameObjects) {
             go.destroy();

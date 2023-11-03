@@ -8,6 +8,7 @@ import com.omarahmed42.components.Flower;
 import com.omarahmed42.components.GoombaAI;
 import com.omarahmed42.components.Ground;
 import com.omarahmed42.components.MushroomAI;
+import com.omarahmed42.components.Pipe;
 import com.omarahmed42.components.PlayerController;
 import com.omarahmed42.components.QuestionBlock;
 import com.omarahmed42.components.Sprite;
@@ -348,5 +349,32 @@ public class Prefabs {
         goomba.addComponent(new GoombaAI());
 
         return goomba;
+    }
+
+    public static GameObject generatePipe(Direction direction) {
+        Spritesheet pipes = AssetPool.getSpritesheet("assets/images/pipes.png");
+        int index = switch (direction) {
+            case Down -> 0;
+            case Up -> 1;
+            case Right -> 2;
+            case Left -> 3;
+            default -> -1;
+        };
+
+        assert index != -1 : "Invalid pipe direction.";
+        GameObject pipe = generateSpriteObject(pipes.getSprite(index), 0.5f, 0.5f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Static);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        pipe.addComponent(rb);
+
+        Box2DCollider b2d = new Box2DCollider();
+        b2d.setHalfSize(new Vector2f(0.5f, 0.5f));
+        pipe.addComponent(b2d);
+        pipe.addComponent(new Pipe(direction));
+        pipe.addComponent(new Ground());
+        return pipe;
     }
 }
