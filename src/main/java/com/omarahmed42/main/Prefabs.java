@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 
 import com.omarahmed42.components.AnimationState;
 import com.omarahmed42.components.BlockCoin;
+import com.omarahmed42.components.Coin;
 import com.omarahmed42.components.Fireball;
 import com.omarahmed42.components.FlagPole;
 import com.omarahmed42.components.Flower;
@@ -206,8 +207,10 @@ public class Prefabs {
         mario.addComponent(stateMachine);
 
         PillboxCollider pb = new PillboxCollider();
-        pb.width = 0.39f;
-        pb.height = 0.31f;
+        pb.width = 0.21f;
+        pb.height = 0.25f;
+        mario.addComponent(pb);
+
         RigidBody2D rb = new RigidBody2D();
         rb.setBodyType(BodyType.Dynamic);
         rb.setContinuousCollision(false);
@@ -215,7 +218,6 @@ public class Prefabs {
         rb.setMass(25.0f);
 
         mario.addComponent(rb);
-        mario.addComponent(pb);
         mario.addComponent(new PlayerController());
 
         return mario;
@@ -458,7 +460,7 @@ public class Prefabs {
         Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
         GameObject fireball = generateSpriteObject(items.getSprite(32), 0.18f, 0.18f);
         fireball.transform.position = position;
-        
+
         RigidBody2D rb = new RigidBody2D();
         rb.setBodyType(BodyType.Dynamic);
         rb.setFixedRotation(true);
@@ -470,5 +472,35 @@ public class Prefabs {
         fireball.addComponent(circleCollider);
         fireball.addComponent(new Fireball());
         return fireball;
+    }
+
+    public static GameObject generateCoin() {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject coin = generateSpriteObject(items.getSprite(7), 0.25f, 0.25f);
+
+        AnimationState coinFlip = new AnimationState();
+        coinFlip.title = "CoinFlip";
+        float defaultFrameTime = 0.23f;
+        coinFlip.addFrame(items.getSprite(7), 0.57f);
+        coinFlip.addFrame(items.getSprite(8), defaultFrameTime);
+        coinFlip.addFrame(items.getSprite(9), defaultFrameTime);
+        coinFlip.setLoop(true);
+
+        StateMachine stateMachine = new StateMachine();
+        stateMachine.addState(coinFlip);
+        stateMachine.setDefaultState(coinFlip.title);
+        coin.addComponent(stateMachine);
+        coin.addComponent(new Coin());
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.12f);
+        coin.addComponent(circleCollider);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Static);
+        coin.addComponent(rb);
+
+        return coin;
+
     }
 }
