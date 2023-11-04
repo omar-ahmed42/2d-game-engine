@@ -29,7 +29,7 @@ import com.omarahmed42.util.AssetPool;
 import com.omarahmed42.util.JMath;
 
 public class DebugDraw {
-    private static int MAX_LINES = 3000;
+    private static int MAX_LINES = 5000;
 
     private static List<Line2D> lines = new ArrayList<>();
     // 6 floats per vertex, 2 vertices per line
@@ -115,7 +115,7 @@ public class DebugDraw {
 
         // Draw the batch
         // Bresenham's line algorithm
-        glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, lines.size());
 
         // Disable Location
         glDisableVertexAttribArray(0);

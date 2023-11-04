@@ -2,6 +2,7 @@ package com.omarahmed42.components;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
@@ -12,12 +13,12 @@ import org.joml.Vector4f;
 
 import com.omarahmed42.main.GameObject;
 import com.omarahmed42.main.KeyListener;
+import com.omarahmed42.main.Prefabs;
 import com.omarahmed42.main.Window;
 import com.omarahmed42.physics2d.Physics2D;
 import com.omarahmed42.physics2d.components.PillboxCollider;
 import com.omarahmed42.physics2d.components.RigidBody2D;
 import com.omarahmed42.physics2d.enums.BodyType;
-import com.omarahmed42.scenes.LevelEditorSceneInitializer;
 import com.omarahmed42.scenes.LevelSceneInitializer;
 import com.omarahmed42.util.AssetPool;
 
@@ -60,6 +61,10 @@ public class PlayerController extends Component {
     private transient boolean deadGoingUp = true;
     private transient float blinkTime = 0.0f;
     private transient SpriteRenderer spr;
+    private transient boolean playWinAnimation = false;
+
+    private transient float timeToCastle = 4.5f;
+    private transient float walkTime = 2.2f;
 
     @Override
     public void start() {
@@ -71,6 +76,31 @@ public class PlayerController extends Component {
 
     @Override
     public void update(float dt) {
+        if (playWinAnimation) {
+            checkOnGround();
+            if (!onGround) {
+                gameObject.transform.scale.x = -0.25f;
+                gameObject.transform.position.y -= dt;
+                stateMachine.trigger("stopRunning");
+                stateMachine.trigger("stopJumping");
+            } else {
+                if (this.walkTime > 0) {
+                    gameObject.transform.scale.x = 0.25f;
+                    gameObject.transform.position.x += dt;
+                    stateMachine.trigger("startRunning");
+                }
+
+                if (!AssetPool.getSound("assets/sounds/stage_clear.ogg").isPlaying()) {
+                    AssetPool.getSound("assets/sounds/stage_clear.ogg");
+                }
+                timeToCastle -= dt;
+                walkTime -= dt;
+                if (timeToCastle <= 0) {
+                    Window.changeScene(new LevelSceneInitializer());
+                }
+            }
+            return;
+        }
         if (isDead) {
             if (this.gameObject.transform.position.y < deadMaxHeight && deadGoingUp) {
                 this.gameObject.transform.position.y += dt * walkSpeed / 2.0f;
@@ -140,6 +170,14 @@ public class PlayerController extends Component {
             if (this.velocity.x == 0) {
                 this.stateMachine.trigger("stopRunning");
             }
+        }
+
+        if (KeyListener.keyBeginPress(GLFW_KEY_E) && playerState == PlayerState.Fire && Fireball.canSpawn()) {
+            Vector2f position = new Vector2f(this.gameObject.transform.position)
+                    .add(this.gameObject.transform.scale.x > 0 ? new Vector2f(0.26f, 0) : new Vector2f(-0.26f, 0));
+            GameObject fireball = Prefabs.generateFireball(position);
+            fireball.getComponent(Fireball.class).goingRight = this.gameObject.transform.scale.x > 0;
+            Window.getScene().addGameObjectToScene(fireball);
         }
 
         checkOnGround();
@@ -240,11 +278,11 @@ public class PlayerController extends Component {
     }
 
     public boolean isHurtInvincible() {
-        return this.hurtInvincibilityTimeLeft > 0;
+        return this.hurtInvincibilityTimeLeft > 0 || this.playWinAnimation;
     }
 
     public boolean isInvincible() {
-        return this.playerState == PlayerState.Invincible || this.hurtInvincibilityTimeLeft > 0;
+        return this.playerState == PlayerState.Invincible || this.hurtInvincibilityTimeLeft > 0  || this.playWinAnimation;
     }
 
     public void enemyBounce() {
@@ -290,5 +328,18 @@ public class PlayerController extends Component {
 
     public boolean hasWon() {
         return false;
+    }
+
+    public void playWinAnimation(GameObject flagPole) {
+        if (!playWinAnimation) {
+            playWinAnimation = true;
+            velocity.set(0.0f, 0.0f);
+            acceleration.set(0.0f, 0.0f);
+            rb.setVelocity(velocity);
+            rb.setIsSensor();
+            rb.setBodyType(BodyType.Static);
+            gameObject.transform.position.x = flagPole.transform.position.x;
+            AssetPool.getSound("assets/sounds/flagpole.ogg").play();
+        }
     }
 }

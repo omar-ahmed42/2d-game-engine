@@ -4,6 +4,8 @@ import org.joml.Vector2f;
 
 import com.omarahmed42.components.AnimationState;
 import com.omarahmed42.components.BlockCoin;
+import com.omarahmed42.components.Fireball;
+import com.omarahmed42.components.FlagPole;
 import com.omarahmed42.components.Flower;
 import com.omarahmed42.components.GoombaAI;
 import com.omarahmed42.components.Ground;
@@ -35,7 +37,6 @@ public class Prefabs {
         return block;
     }
 
-   
     public static GameObject generateMario() {
         Spritesheet playerSprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
         Spritesheet bigPlayerSprites = AssetPool.getSpritesheet("assets/images/bigSpritesheet.png");
@@ -219,7 +220,7 @@ public class Prefabs {
 
         return mario;
     }
-    
+
     public static GameObject generateQuestionBlock() {
         Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
         GameObject questionBlock = generateSpriteObject(items.getSprite(0), 0.25f, 0.25f);
@@ -252,10 +253,9 @@ public class Prefabs {
         b2d.setHalfSize(new Vector2f(0.25f, 0.25f));
         questionBlock.addComponent(b2d);
         questionBlock.addComponent(new Ground());
-        
+
         return questionBlock;
     }
-
 
     public static GameObject generateBlockCoin() {
         Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
@@ -276,7 +276,7 @@ public class Prefabs {
         coin.addComponent(new QuestionBlock());
 
         coin.addComponent(new BlockCoin());
-        
+
         return coin;
     }
 
@@ -414,5 +414,61 @@ public class Prefabs {
         turtle.addComponent(new TurtleAI());
 
         return turtle;
+    }
+
+    public static GameObject generateFlagTop() {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject flagTop = generateSpriteObject(items.getSprite(6), 0.25f, 0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        flagTop.addComponent(rb);
+
+        Box2DCollider boxCollider = new Box2DCollider();
+        boxCollider.setHalfSize(new Vector2f(0.1f, 0.25f));
+        boxCollider.setOffset(new Vector2f(-0.075f, 0.0f));
+        flagTop.addComponent(boxCollider);
+        flagTop.addComponent(new FlagPole(true));
+
+        return flagTop;
+    }
+
+    public static GameObject generateFlagPole() {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject flagPole = generateSpriteObject(items.getSprite(33), 0.25f, 0.25f);
+
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        flagPole.addComponent(rb);
+
+        Box2DCollider boxCollider = new Box2DCollider();
+        boxCollider.setHalfSize(new Vector2f(0.1f, 0.25f));
+        boxCollider.setOffset(new Vector2f(-0.075f, 0.0f));
+        flagPole.addComponent(boxCollider);
+        flagPole.addComponent(new FlagPole(false));
+
+        return flagPole;
+    }
+
+    public static GameObject generateFireball(Vector2f position) {
+        Spritesheet items = AssetPool.getSpritesheet("assets/images/items.png");
+        GameObject fireball = generateSpriteObject(items.getSprite(32), 0.18f, 0.18f);
+        fireball.transform.position = position;
+        
+        RigidBody2D rb = new RigidBody2D();
+        rb.setBodyType(BodyType.Dynamic);
+        rb.setFixedRotation(true);
+        rb.setContinuousCollision(false);
+        fireball.addComponent(rb);
+
+        CircleCollider circleCollider = new CircleCollider();
+        circleCollider.setRadius(0.08f);
+        fireball.addComponent(circleCollider);
+        fireball.addComponent(new Fireball());
+        return fireball;
     }
 }
