@@ -117,7 +117,13 @@ public class TurtleAI extends Component {
         }
 
         if (obj.getComponent(Fireball.class) != null) {
-            stomp();
+            if (!isDead) {
+                walkSpeed *= 3.0f;
+                stomp();
+            } else {
+                isMoving = !isMoving;
+                goingRight = contactNormal.x < 0;
+            }
             obj.getComponent(Fireball.class).disappear();
         }
     }
